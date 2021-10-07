@@ -6,7 +6,10 @@ using namespace std;
 bridge::bridge(int ID, vector <LAN*> CONNECTED_LANS) {
     id = ID;
     connected_LANS = CONNECTED_LANS;
-    vector <string> v(26,"DP");
+    vector <string> v(26,"");
+    for(int i=0; i<connected_LANS.size(); i++) {
+        v[connected_LANS[i]->name - 'A']="DP";
+    }
     LAN_port_status = v;
 
     root_bridge= this;
@@ -70,20 +73,25 @@ trace_message::trace_message(bridge* ROOT, int DIST, bridge* SENDING_BRIDGE){
     sending_bridge = SENDING_BRIDGE;
 }
 
-void bridge::generate_trace() {
+void bridge::send_to_LANs() {
     trace_message m(root_bridge, root_dist, this);
 
     for(int i=0; i<connected_LANS.size(); i++) {
         if(LAN_port_status[connected_LANS[i]->name - 'A'] != "NP") {
             auto curr_LAN = connected_LANS[i];
-            for(int j=0; j<curr_LAN->connected_bridges.size(); j++) {
-                if(curr_LAN->connected_bridges[j] == this) continue;
-                else {
-                    curr_LAN->connected_bridges[j]->rec_buffer.push_back(make_pair(m, curr_LAN));
-                }
-            }
+            curr_LAN->buffer.push_back(m);
         }
     }
 
     return;
+}
+
+void bridge::fetch_from_LANs() {
+    for(int i=0; i<connected_LANS.size(); i++) {
+        if(LAN_port_status[connected_LANS[i]->name -'A'] !="NP") {
+            for(int j=0; j<connected_LANS[i]->buffer.size(); j++) {
+                rec_buffer.push_back(make_pair(connected_LANS[i]->buffer[j], connected_LANS[i]));
+            }
+        }
+    }
 }
