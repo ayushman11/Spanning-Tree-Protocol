@@ -39,6 +39,7 @@ int main()
             }
             // else cout<<"Lan already exists"<<endl;
             conn_LANs.push_back(all_LANs[data[i][0] - 'A']);
+            // cout<<all_LANs[data[i][0] - 'A']->name<<" ";
         }
         string str= data[0];
         int pos= str.find(':');
@@ -46,17 +47,17 @@ int main()
         // cout<<bridge_id<<endl;
 
         bridge* b = new bridge(bridge_id, conn_LANs);
+        // cout<<b->id<<endl;
 
-        for(int j=1; j<data.size(); j++) {
+        for(int j=0; j<data.size()-1; j++) {
             b->connected_LANS[j]->connected_bridges.push_back(b);
         }
-
         all_bridges.push_back(b);
     }
 
-    // for(int i=0; i<all_bridges.size(); i++) {
-    //     cout<<'B'<<all_bridges[i]->id<<": ";
-    //     for(int j=0; j<all_bridges[i]->connected_LANS.size(); j++) cout<<all_bridges[i]->connected_LANS[j]->name<<"-"<<all_bridges[i]->LAN_port_status[all_bridges[i]->connected_LANS[j]->name - 'A']<<" ";
-    //     cout<<endl;
-    // }
+    for(int i=0; i<all_bridges.size(); i++) {
+        cout<<'B'<<all_bridges[i]->id<<": ";
+        for(int j=0; j<all_bridges[i]->connected_LANS.size(); j++) cout<<all_bridges[i]->connected_LANS[j]->name<<"-"<<all_bridges[i]->LAN_port_status[all_bridges[i]->connected_LANS[j]->name - 'A']<<" ";
+        cout<<endl;
+    }
 }

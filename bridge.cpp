@@ -26,8 +26,8 @@ void bridge::update_status(){
 
             root_bridge->id = rec_trace.root_bridge->id;
             root_dist = rec_trace.dist + 1;
-            LAN_port_status[designated_LAN->name - 'A']='DP';
-            LAN_port_status[sender_LAN->name - 'A']='RP';
+            LAN_port_status[designated_LAN->name - 'A']="DP";
+            LAN_port_status[sender_LAN->name - 'A']="RP";
             designated_LAN = sender_LAN;
 
             return;
@@ -38,23 +38,23 @@ void bridge::update_status(){
 
                 root_bridge->id = rec_trace.root_bridge->id;
                 root_dist = rec_trace.dist + 1;
-                LAN_port_status[designated_LAN->name - 'A']='DP';
-                LAN_port_status[sender_LAN->name - 'A']='RP';
+                LAN_port_status[designated_LAN->name - 'A']="DP";
+                LAN_port_status[sender_LAN->name - 'A']="RP";
                 designated_LAN = sender_LAN;
 
                 return;
             } else if (rec_trace.dist + 1 == root_dist) {
 
                 if(rec_trace.sending_bridge->id < designated_bridge->id)
-                LAN_port_status[designated_LAN->name - 'A']='NP';
-                LAN_port_status[sender_LAN->name - 'A']='RP';
+                LAN_port_status[designated_LAN->name - 'A']="NP";
+                LAN_port_status[sender_LAN->name - 'A']="RP";
                 designated_LAN = sender_LAN;
 
                 return;
             }
 
         } else {
-            LAN_port_status[sender_LAN->name - 'A']= 'DP';
+            LAN_port_status[sender_LAN->name - 'A']= "DP";
             return;
         }
     }
