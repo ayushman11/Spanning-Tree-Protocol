@@ -56,8 +56,38 @@ int main()
     }
 
     for(int i=0; i<all_bridges.size(); i++) {
-        cout<<'B'<<all_bridges[i]->id<<": ";
-        for(int j=0; j<all_bridges[i]->connected_LANS.size(); j++) cout<<all_bridges[i]->connected_LANS[j]->name<<"-"<<all_bridges[i]->LAN_port_status[all_bridges[i]->connected_LANS[j]->name - 'A']<<" ";
-        cout<<endl;
+        all_bridges[i]->send_to_LANs();
     }
+    for(int i=0; i<all_bridges.size(); i++) {
+        all_bridges[i]->fetch_from_LANs();
+    }
+    for(int i=0; i<all_bridges.size(); i++) {
+        all_bridges[i]->update_status();
+        for(int k=0; k<all_bridges[i]->rec_buffer.size(); k++) all_bridges[i]->rec_buffer[k].first.disp_msg();
+    }
+    for(int k=0; k<all_bridges.size(); k++) {
+    cout<<'B'<<all_bridges[k]->id<<": ("<<all_bridges[k]->root_bridge->id<<','<<all_bridges[k]->root_dist<<')'<<endl;
+    }
+
+
+    // int updates= 1;
+
+    // while(updates) {
+    //     updates=0;
+    //     for(int i=0; i<all_bridges.size(); i++) {
+    //         // send trace
+    //     }
+
+    //     for(int i=0; i<all_bridges.size(); i++) {
+    //         // receive trace
+    //     }
+
+    //     for(int i=0; i<all_LANs.size(); i++) {
+    //         // delete buffer
+    //     }
+
+    //     for(int i=0; i<all_bridges.size(); i++) {
+    //         // update data
+    //     }
+    // }
 }

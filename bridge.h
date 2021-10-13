@@ -57,4 +57,5 @@ class trace_message{
     bridge* sending_bridge;
 
     trace_message(bridge* ROOT, int DIST,  bridge* SENDING_BRIDGE);
+    void disp_msg();
 };

@@ -14,6 +14,8 @@ bridge::bridge(int ID, vector <LAN*> CONNECTED_LANS) {
 
     root_bridge= this;
     root_dist = 0;
+
+    designated_LAN= NULL;
 }
 
 void bridge::update_status(){
@@ -21,43 +23,56 @@ void bridge::update_status(){
     for(int i=0; i<rec_buffer.size(); i++) {
         auto rec_trace = rec_buffer[i].first;
         auto sender_LAN = rec_buffer[i].second;
+        // cout<<"For B"<<id<<": checking";
+        // rec_trace.disp_msg();
 
+        if(rec_trace.sending_bridge == this) {
+            rec_buffer.pop_back();
+            continue;
+        }
+        
         if(rec_trace.root_bridge->id < root_bridge->id ) {
 
-            root_bridge->id = rec_trace.root_bridge->id;
+            root_bridge = rec_trace.root_bridge;
             root_dist = rec_trace.dist + 1;
+            if(designated_LAN==NULL) designated_LAN = sender_LAN; 
             LAN_port_status[designated_LAN->name - 'A']="DP";
             LAN_port_status[sender_LAN->name - 'A']="RP";
             designated_LAN = sender_LAN;
-
-            return;
+            designated_bridge = rec_trace.sending_bridge;
+            // cout<<"Root id is lower"<<endl;
 
         } else if (rec_trace.root_bridge->id == root_bridge->id) {
 
             if(rec_trace.dist + 1 < root_dist) {
 
-                root_bridge->id = rec_trace.root_bridge->id;
+                root_bridge = rec_trace.root_bridge;
                 root_dist = rec_trace.dist + 1;
-                LAN_port_status[designated_LAN->name - 'A']="DP";
+                LAN_port_status[designated_LAN->name - 'A']="NP";
                 LAN_port_status[sender_LAN->name - 'A']="RP";
                 designated_LAN = sender_LAN;
+                designated_bridge = rec_trace.sending_bridge;
+                // cout<<"Root dist is lower"<<endl;
 
-                return;
             } else if (rec_trace.dist + 1 == root_dist) {
 
                 if(rec_trace.sending_bridge->id < designated_bridge->id)
                 LAN_port_status[designated_LAN->name - 'A']="NP";
                 LAN_port_status[sender_LAN->name - 'A']="RP";
                 designated_LAN = sender_LAN;
+                designated_bridge = rec_trace.sending_bridge;
+                // cout<<"Root dist is equal"<<endl;
 
-                return;
             }
 
-        } else {
-            LAN_port_status[sender_LAN->name - 'A']= "DP";
-            return;
-        }
+        } 
+        // else cout<<"Root id is higher"<<endl;
+
+        // cout<<"END"<<endl;
+        rec_buffer.pop_back();
     }
+
+    return;
 }
 
 
@@ -67,10 +82,15 @@ LAN::LAN(char NAME, vector <bridge*> CONNECTED_BRIDGES) {
     designated_bridge_id = 0;
 }
 
+
 trace_message::trace_message(bridge* ROOT, int DIST, bridge* SENDING_BRIDGE){
     root_bridge = ROOT;
     dist = DIST;
     sending_bridge = SENDING_BRIDGE;
+}
+
+void trace_message::disp_msg() {
+    cout<<'('<<root_bridge->id<<','<<dist<<','<<sending_bridge->id<<')'<<endl;
 }
 
 void bridge::send_to_LANs() {
