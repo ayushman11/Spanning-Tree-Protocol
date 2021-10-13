@@ -27,7 +27,7 @@ void bridge::update_status(){
         // rec_trace.disp_msg();
 
         if(rec_trace.sending_bridge == this) {
-            rec_buffer.pop_back();
+            // rec_buffer.pop_back();
             continue;
         }
         
@@ -69,7 +69,7 @@ void bridge::update_status(){
         // else cout<<"Root id is higher"<<endl;
 
         // cout<<"END"<<endl;
-        rec_buffer.pop_back();
+        // rec_buffer.pop_back();
     }
 
     return;

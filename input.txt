@@ -1,5 +1,6 @@
 1
-3
+4
 B1: A B
-B2: B C
+B2: B C E
 B3: A D
+B4: E F

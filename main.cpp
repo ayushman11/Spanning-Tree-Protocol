@@ -18,7 +18,7 @@ int main()
     int num_bridges; cin>>num_bridges;
     cin >> ws;
     vector <bridge*> all_bridges;
-    vector <LAN*> all_LANs(26);
+    vector <LAN*> all_LANs(26, NULL);
     vector <bool> isLAN(26, false);
 
     for(int i=0; i<num_bridges; i++)
@@ -61,13 +61,55 @@ int main()
     for(int i=0; i<all_bridges.size(); i++) {
         all_bridges[i]->fetch_from_LANs();
     }
+    for(int i=0; i<all_LANs.size(); i++) {
+        if(all_LANs[i] == NULL) continue;
+        all_LANs[i]->buffer.clear();
+        cout<<all_LANs[i]->name<<": "<<endl;
+        for(int k=0; k<all_LANs[i]->buffer.size(); k++) {
+            all_LANs[i]->buffer[k].disp_msg();
+        }
+    }
     for(int i=0; i<all_bridges.size(); i++) {
         all_bridges[i]->update_status();
-        for(int k=0; k<all_bridges[i]->rec_buffer.size(); k++) all_bridges[i]->rec_buffer[k].first.disp_msg();
+        all_bridges[i]->rec_buffer.clear();
+        cout<<'B'<<all_bridges[i]->id<<": "<<endl;
+        for(int k=0; k<all_bridges[i]->rec_buffer.size(); k++) {
+            all_bridges[i]->rec_buffer[k].first.disp_msg();
+        }
     }
     for(int k=0; k<all_bridges.size(); k++) {
     cout<<'B'<<all_bridges[k]->id<<": ("<<all_bridges[k]->root_bridge->id<<','<<all_bridges[k]->root_dist<<')'<<endl;
     }
+
+    for(int i=0; i<all_bridges.size(); i++) {
+        all_bridges[i]->send_to_LANs();
+    }
+    for(int i=0; i<all_bridges.size(); i++) {
+        all_bridges[i]->fetch_from_LANs();
+    }
+    for(int i=0; i<all_LANs.size(); i++) {
+        if(all_LANs[i] == NULL) continue;
+        all_LANs[i]->buffer.clear();
+        cout<<all_LANs[i]->name<<": "<<endl;
+        for(int k=0; k<all_LANs[i]->buffer.size(); k++) {
+            all_LANs[i]->buffer[k].disp_msg();
+        }
+    }
+    for(int i=0; i<all_bridges.size(); i++) {
+        all_bridges[i]->update_status();
+        all_bridges[i]->rec_buffer.clear();
+        cout<<'B'<<all_bridges[i]->id<<": "<<endl;
+        for(int k=0; k<all_bridges[i]->rec_buffer.size(); k++) {
+            all_bridges[i]->rec_buffer[k].first.disp_msg();
+        }
+    }
+    for(int k=0; k<all_bridges.size(); k++) {
+    cout<<'B'<<all_bridges[k]->id<<": ("<<all_bridges[k]->root_bridge->id<<','<<all_bridges[k]->root_dist<<')'<<endl;
+    }
+
+
+    
+
 
 
     // int updates= 1;
