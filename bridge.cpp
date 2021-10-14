@@ -18,7 +18,7 @@ bridge::bridge(int ID, vector <LAN*> CONNECTED_LANS) {
     designated_LAN= NULL;
 }
 
-void bridge::update_status(int &updates, int time){
+void bridge::update_status(int &updates, int time, int trace){
 
     for(int i=0; i<rec_buffer.size(); i++) {
         auto rec_trace = rec_buffer[i].first;
@@ -28,8 +28,10 @@ void bridge::update_status(int &updates, int time){
             // cout<<"skipping"<<endl;
             continue;
         }
-        cout<<time<<" r B"<<this->id<<" ";
-        rec_trace.disp_msg();
+        if(trace) {
+            cout<<time<<" r B"<<this->id<<" ";
+            rec_trace.disp_msg();
+        }
         // cout<<"For B"<<id<<": checking";
         // rec_trace.disp_msg();
 
@@ -119,18 +121,20 @@ trace_message::trace_message(bridge* ROOT, int DIST, bridge* SENDING_BRIDGE){
 }
 
 void trace_message::disp_msg() {
-    cout<<'('<<root_bridge->id<<','<<dist<<','<<sending_bridge->id<<')'<<endl;
+    cout<<"(B"<<root_bridge->id<<','<<dist<<",B"<<sending_bridge->id<<')'<<endl;
 }
 
-void bridge::send_to_LANs(int time) {
+void bridge::send_to_LANs(int time, int trace) {
     trace_message m(root_bridge, root_dist, this);
 
     for(int i=0; i<connected_LANS.size(); i++) {
         if(LAN_port_status[connected_LANS[i]->name - 'A'] != "NP") {
             auto curr_LAN = connected_LANS[i];
             curr_LAN->buffer.push_back(m);
-            cout<<time<<" s B"<<this->id<<" ";
-            m.disp_msg();
+            if(trace) {
+                cout<<time<<" s B"<<this->id<<" ";
+                m.disp_msg();
+            }
         }
     }
 

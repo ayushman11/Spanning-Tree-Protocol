@@ -89,7 +89,7 @@ int main()
         updates=0;
         // cout<<updates<<endl;
         for(int i=0; i<all_bridges.size(); i++) {
-        all_bridges[i]->send_to_LANs(time);
+        all_bridges[i]->send_to_LANs(time, trace);
         }
         time++;
         for(int i=0; i<all_bridges.size(); i++) {
@@ -104,7 +104,7 @@ int main()
             // }
         }
         for(int i=0; i<all_bridges.size(); i++) {
-            all_bridges[i]->update_status(updates, time);
+            all_bridges[i]->update_status(updates, time, trace);
             all_bridges[i]->rec_buffer.clear();
             // cout<<'B'<<all_bridges[i]->id<<": "<<endl;
             // for(int k=0; k<all_bridges[i]->rec_buffer.size(); k++) {

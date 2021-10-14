@@ -27,9 +27,9 @@ class bridge {
 
     bridge(int ID, vector <LAN*> CONNECTED_LANS);
 
-    void update_status(int &updates, int time);
+    void update_status(int &updates, int time, int trace);
     void fetch_from_LANs();
-    void send_to_LANs(int time);
+    void send_to_LANs(int time, int trace);
 };
 
 class LAN {
