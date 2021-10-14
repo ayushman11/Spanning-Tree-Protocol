@@ -3,28 +3,71 @@ using namespace std;
 
 #include"bridgesim.h"
 
-// void gen_trace(LAN* SENDING_LAN, bridge* SENDING_BRIDGE, int time) {
+bool myBool(LAN* lan1, LAN* lan2) {
+    if((lan1->name -'A') - (lan2->name - 'A') < 0) return true;
+    else return false;
+}
 
-//     // send trace message to all connected bridges except the sending bridge
-//     vector <bridge*> adj_bridges= SENDING_LAN->connected_bridges;
-//     for(int i=0; i<adj_bridges.size(); i++) {
-//         if (adj_bridges[i] == SENDING_BRIDGE) continue;
+void simulateSTP(vector <bridge*> all_bridges,vector <LAN*> all_LANs, int trace) {
+    int updates= 1;
+    int time=0;
 
-        
-//     }
-// }
+    while(updates) {
+        updates=0;
+        // cout<<updates<<endl;
+        for(int i=0; i<all_bridges.size(); i++) {
+        all_bridges[i]->send_to_LANs(time, trace);
+        }
+        time++;
+        for(int i=0; i<all_bridges.size(); i++) {
+            all_bridges[i]->fetch_from_LANs();
+        }
+        for(int i=0; i<all_LANs.size(); i++) {
+            if(all_LANs[i] == NULL) continue;
+            all_LANs[i]->buffer.clear();
+            // cout<<all_LANs[i]->name<<": "<<endl;
+            // for(int k=0; k<all_LANs[i]->buffer.size(); k++) {
+            //     all_LANs[i]->buffer[k].disp_msg();
+            // }
+        }
+        for(int i=0; i<all_bridges.size(); i++) {
+            all_bridges[i]->update_status(updates, time, trace);
+            all_bridges[i]->rec_buffer.clear();
+            // cout<<'B'<<all_bridges[i]->id<<": "<<endl;
+            // for(int k=0; k<all_bridges[i]->rec_buffer.size(); k++) {
+            //     all_bridges[i]->rec_buffer[k].first.disp_msg();
+            // }
+        }
+        // for(int k=0; k<all_bridges.size(); k++) {
+        // cout<<'B'<<all_bridges[k]->id<<": ("<<all_bridges[k]->root_bridge->id<<','<<all_bridges[k]->root_dist<<')'<<endl;
+        // }
+        // cout<<updates<<endl;
+    }
 
-// void transmitPackets(LAN* SENDING_LAN,  int time) {
-//      auto msg_buffer= SENDING_LAN->buffer;
-//      auto conn_bridges= SENDING_LAN->connected_bridges;
-//     for(int i=0; i<msg_buffer.size(); i++) {
-//         for(int j=0; j<conn_bridges.size(); j++) {
-//             if(conn_bridges[j] == msg_buffer[i].sending_bridge) continue;
-//             else if(conn_bridges[j]->LAN_port_status[SENDING_LAN->name - 'A'] == "NP") continue;
-//             else {
-//                 conn_bridges[j]->update_status(msg_buffer[i], SENDING_LAN);
-//             }
-//         }
-//     }
-// }
+    for(int i=0; i<all_bridges.size(); i++) {
+        auto curr_bridge = all_bridges[i];
+        int count=0;
+        for(int j=0; j<curr_bridge->connected_LANS.size(); j++) {
+            auto curr_LAN = curr_bridge->connected_LANS[j];
+            if(curr_bridge->LAN_port_status[curr_LAN->name - 'A'] == "DP") count++;
+        }
+        if(!count) curr_bridge->LAN_port_status[curr_bridge->designated_LAN->name - 'A']="NP";
+    }
+
+
+
+    for(int i=0; i<all_bridges.size(); i++) {
+        auto curr_bridge = all_bridges[i];
+        sort(curr_bridge->connected_LANS.begin(), curr_bridge->connected_LANS.end(), myBool);
+        cout<<'B'<<curr_bridge->id<<':';
+
+        for(int j=0; j<curr_bridge->connected_LANS.size(); j++) {
+            auto curr_LAN = curr_bridge->connected_LANS[j];
+            cout<<" "<<curr_LAN->name<<'-'<<curr_bridge->LAN_port_status[curr_LAN->name - 'A'];
+        }
+        cout<<endl;
+    }
+
+    return;
+}
 

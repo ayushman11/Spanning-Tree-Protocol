@@ -94,6 +94,17 @@ void bridge::update_status(int &updates, int time, int trace){
                     updates++;
                     // if(updates) cout<<"B%"<<id<<':'<<endl;
                 }
+            } 
+            else {
+                if(rec_trace.sending_bridge->LAN_port_status[sender_LAN->name - 'A'] == "DP") {
+                    if(rec_trace.sending_bridge->id < this->id) {
+                        LAN_port_status[sender_LAN->name - 'A']="NP";
+                        updates++;
+                    } else {
+                        rec_trace.sending_bridge->LAN_port_status[sender_LAN->name - 'A'] = "NP";
+                        updates++;
+                    }
+                }
             }
 
         } 
