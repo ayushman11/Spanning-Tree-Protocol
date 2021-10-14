@@ -3,14 +3,20 @@ using namespace std;
 
 #include"bridgesim.h"
 
-bool myBool(LAN* lan1, LAN* lan2) {
+bool myBool_lan(LAN* lan1, LAN* lan2) {
     if((lan1->name -'A') - (lan2->name - 'A') < 0) return true;
     else return false;
+}
+
+bool myBool_bridge(bridge* bridge1, bridge* bridge2) {
+    return bridge1->id < bridge2->id;
 }
 
 void simulateSTP(vector <bridge*> all_bridges,vector <LAN*> all_LANs, int trace) {
     int updates= 1;
     int time=0;
+
+    sort(all_bridges.begin(), all_bridges.end(), myBool_bridge);
 
     while(updates) {
         updates=0;
@@ -58,7 +64,7 @@ void simulateSTP(vector <bridge*> all_bridges,vector <LAN*> all_LANs, int trace)
 
     for(int i=0; i<all_bridges.size(); i++) {
         auto curr_bridge = all_bridges[i];
-        sort(curr_bridge->connected_LANS.begin(), curr_bridge->connected_LANS.end(), myBool);
+        sort(curr_bridge->connected_LANS.begin(), curr_bridge->connected_LANS.end(), myBool_lan);
         cout<<'B'<<curr_bridge->id<<':';
 
         for(int j=0; j<curr_bridge->connected_LANS.size(); j++) {
