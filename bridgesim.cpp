@@ -20,7 +20,6 @@ void simulateSTP(vector <bridge*> all_bridges,vector <LAN*> all_LANs, int trace)
 
     while(updates) {
         updates=0;
-        // cout<<updates<<endl;
         for(int i=0; i<all_bridges.size(); i++) {
         all_bridges[i]->send_to_LANs(time, trace);
         }
@@ -31,23 +30,11 @@ void simulateSTP(vector <bridge*> all_bridges,vector <LAN*> all_LANs, int trace)
         for(int i=0; i<all_LANs.size(); i++) {
             if(all_LANs[i] == NULL) continue;
             all_LANs[i]->buffer.clear();
-            // cout<<all_LANs[i]->name<<": "<<endl;
-            // for(int k=0; k<all_LANs[i]->buffer.size(); k++) {
-            //     all_LANs[i]->buffer[k].disp_msg();
-            // }
         }
         for(int i=0; i<all_bridges.size(); i++) {
             all_bridges[i]->update_status(updates, time, trace);
             all_bridges[i]->rec_buffer.clear();
-            // cout<<'B'<<all_bridges[i]->id<<": "<<endl;
-            // for(int k=0; k<all_bridges[i]->rec_buffer.size(); k++) {
-            //     all_bridges[i]->rec_buffer[k].first.disp_msg();
-            // }
         }
-        // for(int k=0; k<all_bridges.size(); k++) {
-        // cout<<'B'<<all_bridges[k]->id<<": ("<<all_bridges[k]->root_bridge->id<<','<<all_bridges[k]->root_dist<<')'<<endl;
-        // }
-        // cout<<updates<<endl;
     }
 
     for(int i=0; i<all_bridges.size(); i++) {

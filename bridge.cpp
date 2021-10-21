@@ -24,17 +24,12 @@ void bridge::update_status(int &updates, int time, int trace){
         auto rec_trace = rec_buffer[i].first;
         auto sender_LAN = rec_buffer[i].second;
         if(rec_trace.sending_bridge == this) {
-            // rec_buffer.pop_back();
-            // cout<<"skipping"<<endl;
             continue;
         }
         if(trace) {
             cout<<time<<" r B"<<this->id<<" ";
             rec_trace.disp_msg();
         }
-        // cout<<"For B"<<id<<": checking";
-        // rec_trace.disp_msg();
-
         
         if(rec_trace.root_bridge->id < root_bridge->id ) {
 
@@ -46,8 +41,6 @@ void bridge::update_status(int &updates, int time, int trace){
             designated_LAN = sender_LAN;
             designated_bridge = rec_trace.sending_bridge;
             updates++;
-            // if(updates) cout<<"B@"<<id<<':'<<endl;
-            // cout<<"Root id is lower"<<endl;
 
         } else if (rec_trace.root_bridge->id == root_bridge->id) {
 
@@ -60,9 +53,6 @@ void bridge::update_status(int &updates, int time, int trace){
                 designated_LAN = sender_LAN;
                 designated_bridge = rec_trace.sending_bridge;
                 updates++;
-                // if(updates) cout<<"B#"<<id<<':'<<endl;
-                // cout<<"Root dist is lower"<<endl;
-
             } else if (rec_trace.dist + 1 == root_dist) {
 
                 if(rec_trace.sending_bridge->id == designated_bridge->id && sender_LAN == designated_LAN) continue;
@@ -87,12 +77,9 @@ void bridge::update_status(int &updates, int time, int trace){
                     designated_LAN = sender_LAN;
                     designated_bridge = rec_trace.sending_bridge;
                     updates++;
-                    // if(updates) cout<<"B$"<<id<<':'<<endl;
-                    // cout<<"Root dist is equal"<<endl;
                 } else {
                     LAN_port_status[sender_LAN->name - 'A']="NP";
                     updates++;
-                    // if(updates) cout<<"B%"<<id<<':'<<endl;
                 }
             } 
             else {
@@ -108,10 +95,6 @@ void bridge::update_status(int &updates, int time, int trace){
             }
 
         } 
-        // else cout<<"Root id is higher"<<endl;
-
-        // cout<<"END"<<endl;
-        // rec_buffer.pop_back();
     }
 
     return;
